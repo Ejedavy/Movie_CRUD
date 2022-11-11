@@ -1,4 +1,4 @@
-package server
+package restServ
 
 import (
 	"log"
@@ -18,9 +18,13 @@ func NewRestServer(api application.FrameworkInterface) *RESTServer {
 
 func (serv RESTServer) Run(port string) {
 	router := mux.NewRouter()
-	router.HandleFunc("/movie", serv.CreateMovie).Methods("POST")
-	router.HandleFunc("/movie/{id}", serv.DeleteMovie).Methods("DELETE")
-	router.HandleFunc("/movies", serv.GetAllMovies).Methods("GET")
-	router.HandleFunc("/movie/{id}", serv.GetMovie).Methods("GET")
+	log.Println("Registering Routes...")
+	router.HandleFunc("/movie", serv.RESTCreateMovie).Methods("POST")
+	router.HandleFunc("/movie/{id}", serv.RESTDeleteMovie).Methods("DELETE")
+	router.HandleFunc("/movie/{id}", serv.RESTUpdateMovie).Methods("PUT")
+	router.HandleFunc("/movies", serv.RESTGetAllMovies).Methods("GET")
+	router.HandleFunc("/movie/{id}", serv.RESTGetMovie).Methods("GET")
+	log.Println("Registered")
+	log.Println("Starting http server at port", port)
 	log.Fatal(http.ListenAndServe(port, router))
 }
